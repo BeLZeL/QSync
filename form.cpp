@@ -48,67 +48,20 @@ Form::Form(QWidget *parent) :
 
     //ui->l_res->setSizePolicy(QSizePolicy::Ignored);
 
-
-    /// LINUX ///
-    //ui->le_src->setText("/tmp/tmpfs/trunk/jessie-64/");
-    //ui->le_dest->setText("/tmp/tmpfs/trunk/jessie-64-copie/");
-    /// belzel@juliend-linux:/tmp/tmpfs/trunk$ rm -fr jessie-64-copie ; mkdir jessie-64-copie ; mkdir jessie-64-copie/delete_me ; touch jessie-64-copie/delete_me/delete_files.txt ; cp jessie-64/Makefile jessie-64-copie; sed -i 's/a/e/g' jessie-64-copie/Makefile
-
+#if defined(Q_OS_WIN)
     /// WINDOWS
-    ui->le_src->setText("F:/Progs/Tomtom/Backup/GO/Backup01/Storage/AVF_INFO");
-    ui->le_dest->setText("F:/test");
-    //ui->le_src->setText(src);
-    ///ui->le_dest->setText("G:/Divers/z_Julien-copie/");
-
-
-    //ui->le_src->setText("O:/Portable/");
-    //ui->le_dest->setText("O:/Portable - copie/");
-
-    //         ui->le_src->setText("O:/Portable/Stéph/Documents and Settings/Stéphanie BRIET/Application Data/ACD Systems/ACDSee/Favorites/");
-    //ui->le_dest->setText("O:/Portable - copie/Stéph/Documents and Settings/Stéphanie BRIET/Application Data/ACD Systems/ACDSee/Favorites/");
-/*
-             ui->le_src->setText("G:/Divers/z_Stéphanie/Documents and Settings/Stéphanie BRIET/Application Data/Microsoft/Office/Récents/");
-                     ui->le_dest->setText("O:/Portable - copie/Stéph/Documents and Settings/Stéphanie BRIET/Application Data/Microsoft/Office/Récents/");
-                     */
-/*
-             ui->le_src->setText("G:/Divers/z_Stéphanie/Documents and Settings/Stéphanie BRIET/Application Data/Microsoft/Internet Explorer/Quick Launch/");
-    ui->le_dest->setText("G:/test/");
-*/
-
-    /*
-COPY FILE : Stéph/Documents and Settings/Propriétaire/SendTo/RecordNow!.RecordNowSendToExt
-COPY FILE : Stéph/Documents and Settings/Stéphanie BRIET/Application Data/ACD Systems/ACDSee/ACD Wallpaper.bmp
-O:/Portable/Stéph/Documents and Settings/Stéphanie BRIET/Application Data/ACD Systems/ACDSee/Favorites/Mes documents.lnk/3DMark ERROR
-COPY FILE : Stéph/Documents and Settings/Stéphanie BRIET/Application Data/ACD Systems/ACDSee/Favorites/Mes documents.lnk/3DMark
-O:/Portable/Stéph/Documents and Settings/Stéphanie BRIET/Application Data/ACD Systems/ACDSee/Favorites/Mes documents.lnk/Dolphin Emulator ERROR
-     */
-
-
-    //src_dir   = new QStringList();
-    //src_files = new QStringList();
-    //dest_dir   = new QStringList();
-    //dest_files = new QStringList();
-    //size = 0;
-
-
-
-    ///thread1 = new MyThread(1);
-    ///thread2 = new MyThread(2);
-
-    //connect(ui->pushButton, SIGNAL(clicked()), thread, SLOT(start()));
-    //connect(thread, SIGNAL(valueChanged(int)), this, SLOT(changerValeur(int)));
-    //connect(thread, SIGNAL(complete(int)), this, SLOT(calculTermine(int)));
-
-    ///connect(thread2, SIGNAL(complete(const QString&, int)), this, SLOT(calculTermine(const QString&, int)));
+    ui->le_src->setText("C:/");
+    ui->le_dest->setText("E:/");
+#else
+    /// LINUX ///
+    ui->le_src->setText("/home/");
+    ui->le_dest->setText("/tmp/");
+#endif
 }
 
 Form::~Form()
 {
     delete ui;
-    //delete src_dir;
-    //delete src_files;
-    //delete dest_dir;
-    //delete dest_files;
 }
 
 void Form::refresh()

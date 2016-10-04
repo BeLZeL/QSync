@@ -1,4 +1,4 @@
-#include "qsyncwindow.h"
+
 #include <QApplication>
 #include <form.h>
 #include <QCommandLineParser>
@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
     QApplication app(argc, argv);
 
     QCommandLineParser parser;
-    parser.setApplicationDescription("Test helper");
+    parser.setApplicationDescription("QSync");
     parser.addHelpOption();
     parser.addVersionOption();
     parser.addPositionalArgument("source", QCoreApplication::translate("main", "Source file to copy."));
