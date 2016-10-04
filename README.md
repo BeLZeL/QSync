@@ -1,0 +1,2 @@
+# QSync
+Synchronize directories
