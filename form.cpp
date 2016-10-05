@@ -132,7 +132,7 @@ void Form::on_pushButton_clicked()
 
     if ( ! QFileInfo(src_directory).isDir() )
     {
-        QMessageBox::information(this, "BAD", ui->le_src->text());
+        QMessageBox::information(this, "BAD", "Directory doesn't exist : " + ui->le_src->text());
     }
 
     dest_directory = ui->le_dest->text();
@@ -143,7 +143,7 @@ void Form::on_pushButton_clicked()
 
     if ( ! QFileInfo(dest_directory).isDir() )
     {
-        QMessageBox::information(this, "BAD", ui->le_dest->text());
+        QMessageBox::information(this, "BAD", "Directory doesn't exist : " + ui->le_dest->text());
     }
 
     count_threads = 2;

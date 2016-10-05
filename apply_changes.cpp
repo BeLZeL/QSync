@@ -5,10 +5,11 @@
 #include <QDateTime>
 #include <QFileInfo>
 
-/// LINUX utime
+#if !defined(Q_OS_WIN)
 #include <sys/types.h>
 #include <utime.h>
 #include <time.h>
+#endif
 
 Apply_changes::Apply_changes(QString src_directory,
                              QString dest_directory,
@@ -79,7 +80,8 @@ void Apply_changes::apply_changes()
         emit updateProgression(pb_value);
     }
 
-/*** LINUX ONLY ??? ***
+#if !defined(Q_OS_WIN)
+/*** LINUX ONLY ??? Set last modification properly ***/
     current_size = 0;
     pb_value = 0;
     for(auto &data : m_new_files)
@@ -91,13 +93,7 @@ void Apply_changes::apply_changes()
 
         struct utimbuf timebuffer;
         QString dest = m_dest_directory + data;
-        //timebuffer.modtime = QFileInfo(m_src_directory + data).lastModified().toTime_t();
-
-
-
-
-        timebuffer.modtime = mktime(strptime(QFileInfo(m_src_directory + data).lastModified().toTime_t(), "%a, %d %b %Y %H:%M:%S GMT"));
-        //os.utime(destFile, (srvLastModified, srvLastModified))
+        timebuffer.modtime = QFileInfo(m_src_directory + data).lastModified().toTime_t();
 
         QByteArray latinArray = dest.toLatin1();
         const char* filename = latinArray.constData();
@@ -109,5 +105,5 @@ void Apply_changes::apply_changes()
         pb_value = int(current_size / (double)m_size * 100.0 );
         emit updateProgression(pb_value);
     }
-    */
+#endif
 }
