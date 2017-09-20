@@ -8,11 +8,35 @@
 #include <QDateTime>
 #include <QSizePolicy>
 #include <QTimer>
+#include <QDebug>
 
-void Form::setArgs(const QString& src, const QString& dest)
+void Form::setArgs(const QString& src, const QString& dest, const QString& mode)
 {
     ui->le_src->setText(src);
     ui->le_dest->setText(dest);
+    m_automatic_mode = ( mode == "AUTO");
+    qDebug() << QString::number(m_automatic_mode);
+}
+
+// Return false to exit program for automatic mode
+// Return true to opened program for manual mode
+bool Form::launch_automatic_mode()
+{
+    if ( !m_automatic_mode )
+    {
+        qDebug() << "Automatic Mode Disabled";
+        return true;
+    }
+
+    qDebug() << "Automatic Mode Enabled";
+
+    if ( ! on_pushButton_clicked() )
+    {
+        qDebug() << "Failed !";
+        return false;
+    }
+
+    return true;
 }
 
 Form::Form(QWidget *parent) :
@@ -33,6 +57,7 @@ Form::Form(QWidget *parent) :
     qRegisterMetaType< MyMap >("MyMap");
     m_current_scan_size = 0;
     m_scan_size = 0;
+    m_automatic_mode = 0;
 
     //this->setLayout(ui->verticalLayout);
     //ui->progressBar->setMaximum(100);
@@ -57,6 +82,7 @@ Form::Form(QWidget *parent) :
     ui->le_src->setText("/home/");
     ui->le_dest->setText("/tmp/");
 #endif
+
 }
 
 Form::~Form()
@@ -118,7 +144,7 @@ void Form::reset_ui()
     ui->progressBar->setValue(0);
 }
 
-void Form::on_pushButton_clicked()
+bool Form::on_pushButton_clicked()
 {
     reset_ui();
 
@@ -132,7 +158,14 @@ void Form::on_pushButton_clicked()
 
     if ( ! QFileInfo(src_directory).isDir() )
     {
-        QMessageBox::information(this, "BAD", "Directory doesn't exist : " + ui->le_src->text());
+        QString error_log = "Directory doesn't exist : " + ui->le_src->text();
+        if ( m_automatic_mode )
+        {
+            qDebug() << error_log;
+            return false;
+        }
+        else
+            QMessageBox::information(this, "BAD", error_log);
     }
 
     dest_directory = ui->le_dest->text();
@@ -143,7 +176,14 @@ void Form::on_pushButton_clicked()
 
     if ( ! QFileInfo(dest_directory).isDir() )
     {
-        QMessageBox::information(this, "BAD", "Directory doesn't exist : " + ui->le_dest->text());
+        QString error_log = "Directory doesn't exist : " + ui->le_dest->text();
+        if ( m_automatic_mode )
+        {
+            qDebug() << error_log;
+            return false;
+        }
+        else
+            QMessageBox::information(this, "BAD", error_log);
     }
 
     count_threads = 2;
@@ -206,6 +246,8 @@ void Form::on_pushButton_clicked()
     ui->pushButton->setEnabled(true);
     ui->pushButton_2->setEnabled(true);
     ************/
+
+    return true;
 }
 
 void Form::updatePathSrc(const QString& absolute_path)
@@ -410,8 +452,19 @@ void Form::Search_Complete()
         ui->pushButton->setEnabled(true);
         ui->pb_scan->setValue(100);
 
+        qDebug() << "Scan is finished";
+
         if ( m_del_files.count() > 0 || m_del_dir.count() > 0 || m_new_dir.count() > 0 || m_new_files.count() > 0 || m_upd_files.count() > 0  )
-        ui->pushButton_2->setEnabled(true);
+        {
+            ui->pushButton_2->setEnabled(true);
+            if ( m_automatic_mode )
+                on_pushButton_2_clicked();
+        }
+        else if ( m_automatic_mode )
+        {
+            qDebug() << "Nothing to update";
+            qApp->exit();
+        }
     }
 }
 
@@ -541,6 +594,12 @@ void Form::Apply_changes_Complete()
     ui->progressBar->setValue(100);
     ui->pb_pause->setEnabled(false);
     ui->pushButton->setEnabled(true);
+
+    if ( m_automatic_mode )
+    {
+        qDebug() << "Synchro is finished";
+        qApp->exit();
+    }
 }
 
 /*

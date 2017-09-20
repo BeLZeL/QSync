@@ -43,11 +43,12 @@ class Form : public QWidget
 
 public:
     explicit Form(QWidget *parent = 0);
-    void setArgs(const QString& src, const QString& dest);
+    void setArgs(const QString& src, const QString& dest, const QString& mode);
+    bool launch_automatic_mode();
     ~Form();
 
 private slots:
-    void on_pushButton_clicked();
+    bool on_pushButton_clicked();
 
     void on_toolButton_clicked();
 
@@ -80,6 +81,7 @@ private:
     Ui::Form *ui;
     QFontMetrics *metrics;
     void reset_ui();
+    bool m_automatic_mode;
 
     /// SCAN
     /// Input

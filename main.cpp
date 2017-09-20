@@ -1,3 +1,5 @@
+// Launch
+// ./QSync /home/<user>/<src_directory> /home/<user>/<dest_directory> [ AUTO ]
 
 #include <QApplication>
 #include <form.h>
@@ -21,9 +23,16 @@ int main(int argc, char *argv[])
     // source is args.at(0), destination is args.at(1)
 
     Form w;
-    if ( args.count() == 2 )
-        w.setArgs(args.at(0), args.at(1));
+
     w.show();
+
+    if ( args.count() == 2 )
+        w.setArgs(args.at(0), args.at(1), "MANUAL");
+    else if ( args.count() == 3 )
+        w.setArgs(args.at(0), args.at(1), args.at(2));
+
+    if ( ! w.launch_automatic_mode() )
+        app.exit();
 
     return app.exec();
 }
